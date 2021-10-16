@@ -34,18 +34,17 @@ namespace OOP.Lab1.ModelComponents
 		private ISurface[] surfaces = new ISurface[NUM_SURFACES];
 		public List<Phonon> Phonons { get { return phonons; } }
 		public List<Phonon> IncomingPhonons { get { return incomingPhonons; } }
-
-		public Cell(double length, double width, Material material, double initTemp) : base(length, width)
+		private Sensor sensor;
+		public Cell(double length, double width, Sensor sensor) : base(length, width)
 		{
+			this.sensor = sensor;
+			this.sensor.AddToArea(this.Area);
+
 			for (int i = 0; i < NUM_SURFACES; ++i)
 			{
 				surfaces[i] = new BoundarySurface((SurfaceLocation)i, this);
 			}
-			Material = material;
-			InitTemp = initTemp;
-			BaseTable = material.BaseData(initTemp, out heatCapacity);
-			ScatterTable = material.ScatterTable(initTemp);
-			Temperature = initTemp;
+			
 		}
 
 		/// <summary>
@@ -147,65 +146,17 @@ namespace OOP.Lab1.ModelComponents
 			}
 		}
 
-		public override string ToString()
-		{
-			return string.Format("{0,-5} {1,-7} {2,-7}", Math.Round(Temperature, 2), phonons.Count, incomingPhonons.Count);
-		}
-		private double heatCapacity;
-		private List<double> temperatures = new List<double>() { };
-		private List<double> xFluxes = new List<double>() { };
-		private List<double> yFluxes = new List<double>() { };
-		public int ID { get; }
-		public double InitTemp { get; }
-		public Material Material { get; }
-		public Tuple<double, double>[] BaseTable { get; private set; }
-		public Tuple<double, double>[] ScatterTable { get; private set; }
-		public double HeatCapacity { get { return heatCapacity; } }
-		public double Temperature { get; private set; }
-		public double AreaCovered { get; private set; }
-
-		public void AddToArea(double area) => AreaCovered += area;
-		public Tuple<double, double>[] GetEmitData(double temp, out double energy)
-		{
-			return Material.EmitData(temp, out energy);
-		}
-
 		public void TakeMeasurements(double effEnergy, double tEq)
 		{
-			int energyUnits = 0;
-			double xFlux = 0;
-			double yFlux = 0;
-			foreach (var p in phonons)
-			{
-				int sign = p.Sign;
-				p.GetDirection(out double dx, out double dy);
-				energyUnits += sign;
-				xFlux += dx * p.Speed * sign;
-				yFlux += dy * p.Speed * sign;
-			}
-			double fluxFactor = effEnergy / AreaCovered;
-
-			temperatures.Add((energyUnits * effEnergy / (AreaCovered * HeatCapacity)) + tEq);
-			xFluxes.Add(fluxFactor * xFlux);
-			yFluxes.Add(fluxFactor * yFlux);
-			UpdateParams();
+			 sensor.TakeMeasurements(phonons, effEnergy, tEq);
 		}
 
-		public SensorMeasurements GetMeasurements()
+		public override string ToString()
 		{
-			SensorMeasurements measurements;
-			measurements.InitTemp = InitTemp;
-			measurements.Temperatures = temperatures;
-			measurements.XFluxes = xFluxes;
-			measurements.YFluxes = yFluxes;
-			return measurements;
+			return string.Format("{0,-20} {1,-7} {2,-7}", sensor.ToString(), phonons.Count, incomingPhonons.Count);
 		}
+		
 
-		private void UpdateParams()
-		{
-			Temperature = temperatures[^1];
-			BaseTable = Material.BaseData(Temperature, out heatCapacity);
-			ScatterTable = Material.ScatterTable(Temperature);
-		}
+		
 	}
 }

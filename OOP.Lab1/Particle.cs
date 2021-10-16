@@ -22,16 +22,12 @@ namespace OOP.Lab1.Particles
 		
 		public Particle(Point position, Vector direction, double speed)
 		{
-            try
-            {
+            
+          
 				Position = position;
 				Direction = direction;
 				Speed = speed;
-			}
-			catch(Exception e)
-            {
-
-            }
+			
 			
 		}
 		/// <summary>

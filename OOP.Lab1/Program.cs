@@ -1,5 +1,6 @@
 ﻿
 using System;
+using OOP.Lab1.Particles;
 using OOP.Lab1.ModelComponents;
 
 namespace OOP.Lab1
@@ -22,10 +23,20 @@ namespace OOP.Lab1
 			rData.W = 2.42e13;
 
 			Material silicon = new Material(in dData, in rData);
-
-			Cell c = new Cell(10, 10, silicon, 300);
+			Sensor s = new Sensor(1, silicon, 300);
+			Cell c = new Cell(10, 10, s);
 
 			Console.WriteLine(c);
+
+			for (int i = 0; i < 1000; ++i)
+            {
+				c.AddPhonon(new Phonon(-1));
+            }
+
+			c.TakeMeasurements(1e6, 300);
+
+			Console.WriteLine(c);
+
 		}
     }
 
