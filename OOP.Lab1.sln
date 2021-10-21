@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OOP.Lab1", "OOP.Lab1\OOP.La
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OOP.Lab1.Tests", "TestProject2\OOP.Lab1.Tests.csproj", "{D4BA5CC3-7ADF-4922-B679-7405DEEE6051}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{91326A34-347A-402F-B734-B6EC3719A0C9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

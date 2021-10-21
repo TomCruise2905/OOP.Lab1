@@ -23,8 +23,12 @@ namespace OOP.Lab1
 			rData.W = 2.42e13;
 
 			Material silicon = new Material(in dData, in rData);
+
+
 			Sensor s = new Sensor(1, silicon, 300);
 			Cell c = new Cell(10, 10, s);
+			Sensor s2= new Sensor(2, silicon, 300);
+			Cell c2= new Cell(1, 1, s2);
 
 			Console.WriteLine(c);
 
@@ -36,6 +40,34 @@ namespace OOP.Lab1
 			c.TakeMeasurements(1e6, 300);
 
 			Console.WriteLine(c);
+
+			// Test transition surface (HandlePhonon)
+			Console.WriteLine("\t\t**Testing transition Surface***");
+			Phonon p1 = new Phonon(1);
+			double px = 10;
+			p1.SetCoords(px, 1);
+			Console.WriteLine($"Position after {px}");
+			TransitionSurface ts = new TransitionSurface(SurfaceLocation.right, c2);
+			Cell c3 = ts.HandlePhonon(p1);
+			p1.GetCoords(out px, out double py);
+			Console.WriteLine($"Position after {px}");
+			Console.WriteLine($"New cell: {c3}");
+
+			//Test emit surface (HandlePhono)
+			Console.WriteLine("\t\t**Testing Emit Surface***");
+			Phonon p2 = new Phonon(1);
+			p2.DriftTime = 10;
+			p1.SetCoords(px, 1);
+			Console.WriteLine("Phonon properties prior to emit surface collision");
+			Console.WriteLine($"Active: {p2.Active}");
+			Console.WriteLine($"Drift Time: {p2.DriftTime}");
+			EmitSurface es = new EmitSurface(SurfaceLocation.left, c, 300);
+			es.HandlePhonon(p2);
+			Console.WriteLine("Phonon properties after to emit surface collision");
+			Console.WriteLine(p2.Active);
+			Console.WriteLine(p2.DriftTime);
+			
+
 
 		}
     }

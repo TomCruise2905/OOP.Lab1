@@ -67,7 +67,8 @@ namespace OOP.Lab1.Particles
 		/// <param name="dy">The y coordinate</param>
 		public void GetDirection(out double dx, out double dy)
 		{
-		        GetDirection(out dx, out dy);
+			dx = Direction.DX;
+			dy = Direction.DY;
 		}
 		/// <summary>
 		/// Drifts (moves) the particle in space
